@@ -1,0 +1,189 @@
+In This Article ,We will deal with Redirect and Errors in Flask Python. Redirect() is used to redirect the URL to the specified location and Errors are the issues we face in the server. For example,
+
+-> network connection of the server to another system failed.
+-> a programming error in a library you are using.
+-> backend server overloaded.
+-> harddrive crashed.
+
+These are the some application or server errors.
+
+Flask Redirect()
+
+The Redirect() returns the response object and redirects the user to another target location with the specified code.
+
+The Syntax of Redirect() is :
+
+flask.redirect(location,code=302)
+
+Parameters:
+
+location(str): the location which URL directs to.
+
+code(int): The status code for Redirect.
+
+The default code is 302 which means "found".
+
+The different  types of HTTP codes are:
+
+Code    Status
+
+300     Multiple_choices
+
+301     Moved_permanently
+
+302     Found
+
+303     See_other
+
+304     Not_modified
+
+305     Use_proxy
+
+306     Reserved
+
+307     Temporary_redirect
+
+We can redirect the URL using Flask by importing redirect.
+
+Let's see how to import redirect from Flask
+
+Python3:
+
+from flask import redirect
+
+Let's take an simple example to redirect the URL using flask.
+
+Python3:
+
+#importing redirect 
+from flask import Flask,redirect, url_for,render_template, request
+#Initialize the flask application
+app=Flask(__name__)
+#It will load the form template which is in login.html
+@app.route('/')
+def index():
+    return render_template("login.html")
+#loggnig to the form with method POST or GET 
+@app.route("/login",methods=["POST","GET"])
+def login():
+    #if the method is POST and Username is admin then it will redirects to success url.
+    if request.method=="POST" and request.form["username"]=="admin" :
+        return redirect(url_for("success"))
+    #if the method is GET or username is not admin,then it redirects to index method.
+    return redirect(url_for('index'))
+@app.route('/success')
+def success():
+    return "logged in successfully"
+
+if __name__ == '__main__':
+    app.run(debug =True)
+
+The code for the  login.html is 
+
+HTML:
+
+<!DOCTYPE html>
+<html>
+<body>
+<form>
+Username: <input  name=Username type=text></input><br>
+<input type=button value=login></input>
+</form>
+</body>
+</html>
+
+In the command if we give  the local host address 5000
+
+
+Command prompt
+
+then it will open the browser with the given address like
+
+
+Browser
+
+It loads the html code.If the Username  is admin  and method is POST then it will redirect to the  success url  and display logged in successfully.
+In the login method we gave the condition i.e., if the username is admin and method is POST then redirect to route Success.
+
+In the other case , if the Username is something like xyz then it will redirect to index method i.e., it will load the form again until the username is admin.
+
+This is how redirect works in flask using redirect().
+
+If there is error in the address or if there is no such URL then Flask has abort() function to exit with an error code.
+
+Syntax:
+
+flask.abort(code)
+
+Code parameter takes any of the following values:
+
+Code     Error
+
+400      Bad request
+
+401      Unauthenticated
+
+403      Forbidden
+
+404      Not Found
+
+406      Not Acceptable
+
+415      Unsupported Media Type
+
+429      Too Many Requests
+
+The above are the different types of errors we can abort in application.
+
+flask.abort() raises an error,if there is any issue in the application or server.
+
+You can create your custom message Error using abort().
+
+Syntax:
+
+flask.abort(code,"your custom message")
+
+Let's see an example of error code:
+
+Python3
+
+#importing redirect 
+from flask import Flask,redirect, url_for,render_template, request
+#Initialize the flask application
+app=Flask(__name__)
+#It will load the form template which is in login.html
+@app.route('/')
+def index():
+    return render_template("login.html")
+#loggnig to the form with method POST or GET 
+@app.route("/login",methods=["POST","GET"])
+def login():
+    #if the method is POST and Username is admin then it will redirects to success url.
+    if request.method=="POST" and request.form["username"]=="admin" :
+        return redirect(url_for("Unknown_route"))
+    else:
+        flask.abort(404)   
+    #if the method is GET or username is not admin,then it redirects to index method.
+    return redirect(url_for('index'))
+@app.route('/success')
+def success():
+    return "logged in successfully"
+
+if __name__ == '__main__':
+    app.run(debug =True)
+
+
+
+Output:
+
+Page Not Found Error
+
+Since in the 14th line we gave the unknown route to the redirect URL, Hence it don't return anything and else block will execute i.e., it raises Not Found Error Since the abort code is 404.
+
+Or in else block ,if we give
+
+flask.abort(404,"This is My Custom Message")
+
+In the output it will show This is My Custom Message.
+
+This is how errors works in Flask.
